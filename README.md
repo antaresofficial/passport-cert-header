@@ -1,7 +1,5 @@
 # passport-cert-header
 
-[![Build]()]()
-
 [passport.js]() authentication and authorisation strategy for client certificate received by forwarded header.
 
 passport-cert-header is for process forwarded cert from router to a Node.js application.
@@ -21,10 +19,9 @@ var passport = require('passport');
 var CertHeaderStrategy = require('passport-cert-header').Strategy;
 
 passport.use(new CertHeaderStrategy({header: 'client-cert'}, function({ cert: clientCert }, done) {
-  var cn = clientCert.subject,
+  var { cn } = clientCert.subject,
       user = null;
 
-  const { cn }  = clientCert;
   // The CN will typically be checked against a database
   if(cn === 'test-cn') {
     user = { name: 'Test User' }
@@ -38,10 +35,9 @@ The verify callback can be supplied with the `request` object by setting the `pa
 
 ````javascript
 passport.use(new ClientCertHeaderStrategy({ passReqToCallback: true }, function(req, { cert: clientCert }, done) {
-  var cn = clientCert.subject,
+  var { cn } = clientCert.subject,
       user = null;
       
-  const { cn }  = clientCert;
   // The CN will typically be checked against a database
   if(cn === 'test-cn') {
     user = { name: 'Test User' }
