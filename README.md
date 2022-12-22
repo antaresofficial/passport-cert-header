@@ -14,7 +14,7 @@ The strategy constructor requires a verify callback, which will be executed on e
 
 * `passReqToCallback` - optional. Causes the request object to be supplied to the verify callback as the first parameter.
 
-The verify callback is passed with the [client certificate object](https://nodejs.org/api/crypto.html#class-x509certificate) and a `done` callback. The `done` callback must be called as per the [passport.js documentation](http://passportjs.org/guide/configure/).
+The verify callback is passed with the [client certificate object](https://nodejs.org/api/tls.html#certificate-object) and a `done` callback. The `done` callback must be called as per the [passport.js documentation](http://passportjs.org/guide/configure/).
 
 ````javascript
 var passport = require('passport');
@@ -23,8 +23,8 @@ var CertHeaderStrategy = require('passport-cert-header').Strategy;
 passport.use(new CertHeaderStrategy({header: 'client-cert'}, function({ cert: clientCert }, done) {
   var cn = clientCert.subject,
       user = null;
-  // .. extract CN here ..
-  
+
+  const { cn }  = clientCert;
   // The CN will typically be checked against a database
   if(cn === 'test-cn') {
     user = { name: 'Test User' }
@@ -41,6 +41,7 @@ passport.use(new ClientCertHeaderStrategy({ passReqToCallback: true }, function(
   var cn = clientCert.subject,
       user = null;
       
+  const { cn }  = clientCert;
   // The CN will typically be checked against a database
   if(cn === 'test-cn') {
     user = { name: 'Test User' }

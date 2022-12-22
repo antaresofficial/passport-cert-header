@@ -1,5 +1,6 @@
-import { X509Certificate } from 'crypto';
+import net from 'net';
 import { Strategy } from 'passport-strategy';
+import tls from 'tls';
 
 /*
  * passport.js forwarder client certificate strategy
@@ -27,7 +28,7 @@ export default class CertHeaderStrategy extends Strategy {
   authenticate(req) {
     const that = this;
 
-    const foundHeader = req.headers[this.header];
+    const foundHeaderValue = req.headers[this.header];
 
     const verified = function verifed(err, user) {
       if (err) {
@@ -41,17 +42,20 @@ export default class CertHeaderStrategy extends Strategy {
       return that.success(user);
     };
 
-    if (foundHeader) {
-      const decodedPem = decodeURIComponent(foundHeader);
-      const cert = new X509Certificate([
-        '-----BEGIN CERTIFICATE-----',
-        decodedPem,
-        '-----END CERTIFICATE-----',
-      ].join('\n'));
+    if (foundHeaderValue) {
+      const decodedPem = decodeURIComponent(foundHeaderValue);
 
-      if (!cert) {
-        that.fail();
-      }
+      const secureContext = tls.createSecureContext({
+        cert: [
+          '-----BEGIN CERTIFICATE-----',
+          decodedPem,
+          '-----END CERTIFICATE-----',
+        ].join('\n'),
+      });
+
+      const secureSocket = new tls.TLSSocket(new net.Socket(), { secureContext });
+      const cert = secureSocket.getCertificate();
+      secureSocket.destroy();
 
       if (this._passReqToCallback) {
         this._verify(req, { cert }, verified);

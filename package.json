@@ -1,6 +1,6 @@
 {
   "name": "passport-cert-header",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Passport.js strategy for forwarded client certificate authentication",
   "main": "src",
   "type": "module",

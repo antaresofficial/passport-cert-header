@@ -12,7 +12,7 @@ import helpers from './helpers.js';
 const HTTP_PORT = 3080;
 
 const pem = fs.readFileSync(path.join(helpers.__dirname, 'data', 'client.crt'), { encoding: 'utf8' });
-const encodedPem = helpers.getEncodedPem(pem);
+const encodedPem = helpers.extractBody(pem);
 
 const headerName = 'Client-Cert';
 
@@ -45,13 +45,9 @@ describe('Cert header strategy integration', () => {
       const strategy = new CertHeaderStrategy({ header: headerName }, ({ cert }, d) => {
         assert.strictEqual(
           cert.fingerprint,
-          '28:3F:00:2D:08:8C:9B:7B:59:39:20:61:F8:83:1D:2E:CC:AB:09:73',
+          'E1:6E:DD:97:28:A6:DD:48:63:92:F1:C8:98:0A:48:ED:4E:4A:52:82',
         );
-        const subject = cert.subject
-          .split('\n')
-          .map((el) => el && el.split('='))
-          .filter(Boolean)
-          .reduce((res, [type, value]) => ({ ...res, [type]: value }), {});
+        const { subject } = cert;
         d(null, { cn: subject.CN });
       });
 

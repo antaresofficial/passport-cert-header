@@ -1,7 +1,7 @@
 import { Request } from 'express';
 
-import { X509Certificate } from 'crypto';
 import passport from 'passport';
+import { PeerCertificate } from 'tls';
 
 export interface StrategyOptions {
   passReqToCallback?: false;
@@ -22,11 +22,11 @@ export interface VerifyCallback {
 }
 
 export interface VerifyFunctionWithRequest {
-  (payload: { cert: X509Certificate }, req: Request, done: VerifyCallback): void;
+  (payload: { cert: PeerCertificate }, req: Request, done: VerifyCallback): void;
 }
 
 export interface VerifyFunction {
-  (payload: { cert: X509Certificate }, done: VerifyCallback): void;
+  (payload: { cert: PeerCertificate }, done: VerifyCallback): void;
 }
 
 declare class Strategy implements passport.Strategy {

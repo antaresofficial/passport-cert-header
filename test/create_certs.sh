@@ -8,10 +8,10 @@ function create_user
 user="$@"
 openssl genrsa -out ${user}.key 1024
 openssl req -new -key ${user}.key -out ${user}.csr <<END
-UK
-Gloucestershire
-Cheltenham
-Ripjar
+IP
+Reikland
+Altdorf
+Pavel
 Engineering
 ${user}
 ${user}@example.com
@@ -25,7 +25,7 @@ function create_ca
 {
 openssl genrsa -out ca.key 2048
 openssl req -new -x509 -key ca.key -days 9999 -out ca.crt <<END
-UK
+IP
 Gloucestershire
 Cheltenham
 Ripjar

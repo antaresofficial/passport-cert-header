@@ -1,14 +1,13 @@
-import { X509Certificate } from 'crypto';
+import chai from 'chai';
 import fs from 'fs';
 import { beforeEach, describe, it } from 'mocha';
 import path from 'path';
-import chai from 'chai';
 
 import Strategy from '../src/index.mjs';
 import helpers from './helpers.js';
 
 const pem = fs.readFileSync(path.join(helpers.__dirname, 'data', 'client.crt'), { encoding: 'utf8' });
-const encodedPem = helpers.getEncodedPem(pem);
+const body = helpers.extractBody(pem);
 
 // eslint-disable-next-line unused-imports/no-unused-vars
 const should = chai.should();
@@ -41,9 +40,9 @@ describe('Cert header strategy', () => {
 
   describe('strategy authenticating a request', () => {
     let req;
-    const headers = { h1: encodedPem, h2: 'header two', h3: 'header three' };
+    const headers = { h1: body, h2: 'header two', h3: 'header three' };
     const options = { header: 'h1' };
-    const origCert = new X509Certificate(pem);
+    const origCert = helpers.getCert(pem);
     let failed;
     let succeeded;
     let passedToVerify;
