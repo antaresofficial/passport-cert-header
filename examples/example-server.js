@@ -1,8 +1,8 @@
-import connect from 'connect';
-import http from 'http';
-import passport from 'passport';
+const connect = require('connect');
+const http = require('http');
+const passport = require('passport');
 
-import CertHeaderStrategy from '../src/index.mjs';
+const CertHeaderStrategy = require('../lib');
 
 const PORT = 3443;
 
@@ -12,7 +12,7 @@ const PORT = 3443;
 // Bob is not in the list, so requests will not be authorized.
 const users = ['client'];
 
-/*
+/**
  * Dummy user lookup method - simulates database lookup
  */
 function lookupUser(cn, done) {

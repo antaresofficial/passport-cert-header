@@ -1,17 +1,17 @@
-import { assert } from 'chai';
-import connect from 'connect';
-import fs from 'fs';
-import http from 'http';
-import { afterEach, describe, it } from 'mocha';
-import passport from 'passport';
-import path from 'path';
-import request from 'request';
-import CertHeaderStrategy from '../src/index.mjs';
-import helpers from './helpers.js';
+const { assert } = require('chai');
+const connect = require('connect');
+const fs = require('fs');
+const http = require('http');
+const { afterEach, describe, it } = require('mocha');
+const passport = require('passport');
+const path = require('path');
+const request = require('request');
+const CertHeaderStrategy = require('../lib');
+const helpers = require('./helpers');
 
 const HTTP_PORT = 3080;
 
-const pem = fs.readFileSync(path.join(helpers.__dirname, 'data', 'client.crt'), { encoding: 'utf8' });
+const pem = fs.readFileSync(path.join(__dirname, 'data', 'client.crt'), { encoding: 'utf8' });
 const encodedPem = helpers.extractBody(pem);
 
 const headerName = 'Client-Cert';

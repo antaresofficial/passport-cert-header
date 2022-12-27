@@ -1,7 +1,5 @@
-import net from 'net';
-import path from 'path';
-import tls from 'tls';
-import { fileURLToPath } from 'url';
+const net = require('net');
+const tls = require('tls');
 
 /*
  * Stub the relevent parts of the request API
@@ -17,12 +15,6 @@ const dummyReq = (authorized, cert, headers) => ({
   },
   headers,
 });
-
-/*
- * __dirname and __filename is not defined in ES module scope
- */
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 const extractBody = (pem) => {
   const regexp = /(-+BEGIN\s+.*CERTIFICATE[^-]*-+(?:\s|\r|\n)+)([A-Za-z0-9+/\r\n]+={0,2})/g;
@@ -40,10 +32,8 @@ const getCert = (pem) => {
   return cert;
 };
 
-export default {
+module.exports = {
   dummyReq,
   extractBody,
   getCert,
-  __dirname,
-  __filename,
 };

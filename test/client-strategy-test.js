@@ -1,15 +1,15 @@
-import chai from 'chai';
-import fs from 'fs';
-import { beforeEach, describe, it } from 'mocha';
-import path from 'path';
+const chai = require('chai');
+const fs = require('fs');
+const { beforeEach, describe, it } = require('mocha');
+const path = require('path');
 
-import Strategy from '../src/index.mjs';
-import helpers from './helpers.js';
+const Strategy = require('../lib');
+const helpers = require('./helpers');
 
-const pem = fs.readFileSync(path.join(helpers.__dirname, 'data', 'client.crt'), { encoding: 'utf8' });
+const pem = fs.readFileSync(path.join(__dirname, 'data', 'client.crt'), { encoding: 'utf8' });
 const body = helpers.extractBody(pem);
 
-// eslint-disable-next-line unused-imports/no-unused-vars
+// eslint-disable-next-line no-unused-vars
 const should = chai.should();
 
 describe('Cert header strategy', () => {
