@@ -29,6 +29,7 @@
   "homepage": "https://github.com/h0x0d9/passport-cert-header",
   "dependencies": {
     "connect": "^3.4.1",
+    "express": "^4.18.2",
     "passport": "^0.6.0",
     "passport-strategy": "^1.0.0"
   },

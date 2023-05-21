@@ -1,30 +1,25 @@
-const connect = require('connect');
 const http = require('http');
 const passport = require('passport');
+const express = require('express');
 
 const CertHeaderStrategy = require('../lib');
 
+const users = ['client'];
 const PORT = 3443;
 
-// A list of valid user IDs
-// test/data contains certs for users bob and ann.
-// Ann is in the list, so requests with that key/cert will be authorized.
-// Bob is not in the list, so requests will not be authorized.
-const users = ['client'];
+function authenticatedOrGuest(req, res, next) {
+  return passport.authenticate('cert-header', { session: false }, (err, user) => {
+    if (err) return next(err);
+    if (user) req.user = user;
+    next();
+  })(req, res, next);
+}
 
-/**
- * Dummy user lookup method - simulates database lookup
- */
 function lookupUser(cn, done) {
   const user = users.indexOf(cn) >= 0 ? { username: cn } : null;
   done(null, user);
 }
 
-/**
- * Authentication callback for authentication
- *  - Look up a user by ID (which, in this simple case, is identical
- *    to the certificate's Common Name attribute).
- */
 function authenticate(payload, done) {
   const { cert } = payload;
   const { subject } = cert;
@@ -46,7 +41,7 @@ function authenticate(payload, done) {
         console.log(`${msg} ✘ - no such user`);
         done(null, false);
       } else {
-        console.log(`${msg} - ✔`);
+        console.log(`${msg} - ✔️`);
         done(null, user);
       }
     });
@@ -54,12 +49,17 @@ function authenticate(payload, done) {
 }
 
 passport.use(new CertHeaderStrategy({ header: 'client-cert' }, authenticate));
-
-const app = connect();
+const app = express();
 app.use(passport.initialize());
-app.use(passport.authenticate('cert-header', { session: false }));
-app.use((req, res) => {
-  res.end(JSON.stringify(req.user));
+
+app.get('/', authenticatedOrGuest, (req, res) => {
+  let message;
+  if (req.user) {
+    message = JSON.stringify(req.user);
+  } else {
+    message = 'Guest!';
+  }
+  res.end(message);
 });
 
 http.createServer(app).listen(PORT, () => {

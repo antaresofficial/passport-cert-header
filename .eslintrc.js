@@ -18,6 +18,7 @@ module.exports = {
         ignoreDeclarationSort: true,
       },
     ],
+    'consistent-return': 'off',
     'no-console': 'off',
     'no-underscore-dangle': 'off',
     'no-multi-assign': 'off',
